@@ -8,14 +8,15 @@
         var window = document.defaultView;
         var wrapper = document.createElement('span');
         var style = element.getAttribute('style');
+        var container = element.parentNode;
         // get options
-        var bottom = parseFloat(attrs['bottom']);
         var top = parseFloat(attrs['top']);
         var media = window.matchMedia(attrs['media'] || 'all');
-        var stickToParent = attrs['stickToParent'] ? true : false;
+        var stickToContainer = attrs['stickToContainer'] ? true : false;
         // initialize states
         var stickedToBottom = false;
         var stickedToTop = false;
+        var bottom = 0;
         var offset = {};
 
         function stick() {
@@ -79,12 +80,48 @@
         function elementHeigherThanWindow() {
           return offset.height + top > window.innerHeight;
         }
+
+        function containerBottomReached() {
+          var containerOffset = container.getBoundingClientRect();
+          return (stickedToTop) ? (containerOffset.bottom - offset.height - top) < 0 : (containerOffset.bottom - window.innerHeight) < 0;
+        }
+
+        function deltaContainerBottom() {
+          var containerOffset = container.getBoundingClientRect();
+
+          var delta = (stickedToTop) ? (containerOffset.bottom - offset.height) : window.innerHeight - containerOffset.bottom;
+          return delta;
+        }
+
         // window scroll listener
         function onscroll() {
           // if activated
           if (media.matches) {
             // get element offset
             offset = element.getBoundingClientRect();
+
+            if (stickToContainer) {
+              if (stickedToBottom || stickedToTop) {
+                if (containerBottomReached()) {
+                  var parentNode = element.parentNode;
+                  var parentOffset = parentNode.getBoundingClientRect();
+
+                  console.log('test');
+
+                  var position = (stickedToTop) ? 'top: ' + (deltaContainerBottom()) + 'px;' : 'bottom: ' + (deltaContainerBottom()) + 'px';
+                  // style element
+                  element.setAttribute('style',
+                    'left: ' + parentOffset.left + 'px;' +
+                    'margin: 0;' +
+                    'position: fixed;' +
+                    'transition: none;' +
+                    'width: ' + parentOffset.width + 'px;' +
+                    position);
+
+                  // console.log(bottom);
+                }
+              }
+            }
 
             if (elementHeigherThanWindow()) {
               // element to high to be sticked to top
@@ -120,6 +157,7 @@
             }
           }
         }
+
         // window resize listener
         function onresize() {
           if (stickedToTop || stickedToBottom) {
@@ -145,6 +183,7 @@
           window.removeEventListener('scroll', onscroll);
           window.removeEventListener('resize', onresize);
         }
+
         // bind listeners
         window.addEventListener('scroll', onscroll);
         window.addEventListener('resize', onresize);
