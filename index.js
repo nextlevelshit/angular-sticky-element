@@ -15,9 +15,9 @@
         // cache style
           style = element.getAttribute('style'),
         // get options
-          bottom = parseFloat(attrs[namespace + 'Bottom']),
-          media = window.matchMedia(attrs[namespace + 'Media'] || 'all'),
-          top = parseFloat(attrs[namespace + 'Top']),
+          bottom = parseFloat(attrs['bottom']),
+          top = parseFloat(attrs['top']),
+          media = window.matchMedia(attrs['media'] || 'all'),
         // initialize states
           stickedToBottom = false,
           stickedToTop = false,
@@ -137,11 +137,7 @@
           if (stickedToTop || stickedToBottom) {
             var position = (stickedToTop) ? 'top: 0' : 'bottom: 0';
             var parentNode = element.parentNode;
-
             var parentOffset = parentNode.getBoundingClientRect();
-
-            console.log(parentOffset);
-
             // style element
             element.setAttribute('style',
               'left: ' + parentOffset.left + 'px;' +
@@ -151,7 +147,6 @@
               position + 'px;' +
               'width:' + parentOffset.width + 'px');
           }
-
           // re-initialize sticky
           onscroll();
         }
@@ -175,4 +170,4 @@
       }
     };
   });
-})('angular-sticky-element');
+})('angularStickyElement');
