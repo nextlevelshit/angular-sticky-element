@@ -26,7 +26,7 @@
         function stick() {
           var
             computedStyle = getComputedStyle(element),
-            position = (stickedToTop) ? 'top: 0' : 'bottom: 0',
+            position = (stickedToTop) ? 'top: ' + top : 'bottom: 0',
             parentNode = element.parentNode,
             nextSibling = element.nextSibling;
           // replace element with wrapper containing element
@@ -74,7 +74,7 @@
         }
 
         function elementReachedWindowTop() {
-          var deltaWindowTop = offset.top < 0;
+          var deltaWindowTop = offset.top < top;
           return deltaWindowTop;
         }
 
@@ -82,11 +82,11 @@
           var parentNode = element.parentNode;
           var parentOffset = parentNode.getBoundingClientRect();
 
-          return parentOffset.top > 0;
+          return parentOffset.top > top;
         }
 
         function elementHeigherThanWindow() {
-          return offset.height > window.innerHeight;
+          return offset.height + top > window.innerHeight;
         }
 
         // window scroll listener
@@ -135,7 +135,7 @@
         function onresize() {
 
           if (stickedToTop || stickedToBottom) {
-            var position = (stickedToTop) ? 'top: 0' : 'bottom: 0';
+            var position = (stickedToTop) ? 'top: ' + top : 'bottom: 0';
             var parentNode = element.parentNode;
             var parentOffset = parentNode.getBoundingClientRect();
             // style element
