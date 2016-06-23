@@ -1,0 +1,24 @@
+{
+  "name": "angular-sticky-element",
+  "authors": [
+    "Michael Czechowski <mail@dailysh.it>"
+  ],
+  "description": "Responsive sticky elements for AngularJS",
+  "main": "index.js",
+  "keywords": [
+    "angular",
+    "sticky",
+    "element",
+    "responsive"
+  ],
+  "license": "MIT",
+  "homepage": "www.dailysh.it",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "www/lib",
+    "test",
+    "tests"
+  ]
+}
