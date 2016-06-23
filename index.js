@@ -1,47 +1,39 @@
-(function(namespace) {
+(function (namespace) {
   // set sticky module and directive
-  angular.module(namespace, []).directive(namespace, function() {
+  angular.module(namespace, []).directive(namespace, function () {
     return {
-      link: function(scope, angularElement, attrs) {
-        var
-        // get element
-          element = angularElement[0],
-        // get document
-          document = element.ownerDocument,
-        // get window
-          window = document.defaultView,
-        // get wrapper
-          wrapper = document.createElement('span'),
-        // cache style
-          style = element.getAttribute('style'),
+      link: function (scope, angularElement, attrs) {
+        var element = angularElement[0];
+        var document = element.ownerDocument;
+        var window = document.defaultView;
+        var wrapper = document.createElement('span');
+        var style = element.getAttribute('style');
         // get options
-          bottom = parseFloat(attrs['bottom']),
-          top = parseFloat(attrs['top']),
-          media = window.matchMedia(attrs['media'] || 'all'),
+        var bottom = parseFloat(attrs['bottom']);
+        var top = parseFloat(attrs['top']);
+        var media = window.matchMedia(attrs['media'] || 'all');
+        var stickToParent = attrs['stickToParent'] ? true : false;
         // initialize states
-          stickedToBottom = false,
-          stickedToTop = false,
-          offset = {};
+        var stickedToBottom = false;
+        var stickedToTop = false;
+        var offset = {};
 
         function stick() {
-          var
-            computedStyle = getComputedStyle(element),
-            position = (stickedToTop) ? 'top: ' + top : 'bottom: 0',
-            parentNode = element.parentNode,
-            nextSibling = element.nextSibling;
+          var computedStyle = getComputedStyle(element);
+          var position = (stickedToTop) ? 'top: ' + top : 'bottom: 0';
+          var parentNode = element.parentNode;
+          var nextSibling = element.nextSibling;
           // replace element with wrapper containing element
           wrapper.appendChild(element);
 
           if (parentNode) {
             parentNode.insertBefore(wrapper, nextSibling);
           }
-
           // style wrapper
           wrapper.setAttribute('style',
             'display:' + computedStyle.display + ';' +
             'height:' + element.offsetHeight + 'px;' +
             'margin:' + computedStyle.margin + ';');
-
           // style element
           element.setAttribute('style',
             'left: ' + offset.left + 'px;' +
@@ -81,14 +73,12 @@
         function stickedElementReachedParent() {
           var parentNode = element.parentNode;
           var parentOffset = parentNode.getBoundingClientRect();
-
           return parentOffset.top > top;
         }
 
         function elementHeigherThanWindow() {
           return offset.height + top > window.innerHeight;
         }
-
         // window scroll listener
         function onscroll() {
           // if activated
@@ -130,10 +120,8 @@
             }
           }
         }
-
         // window resize listener
         function onresize() {
-
           if (stickedToTop || stickedToBottom) {
             var position = (stickedToTop) ? 'top: ' + top : 'bottom: 0';
             var parentNode = element.parentNode;
@@ -154,17 +142,14 @@
         // destroy listener
         function ondestroy() {
           onresize();
-
           window.removeEventListener('scroll', onscroll);
           window.removeEventListener('resize', onresize);
         }
-
         // bind listeners
         window.addEventListener('scroll', onscroll);
         window.addEventListener('resize', onresize);
 
         scope.$on('$destroy', ondestroy);
-
         // initialize sticky
         onscroll();
       }
