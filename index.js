@@ -74,7 +74,10 @@
         function stickedElementReachedParent() {
           var parentNode = element.parentNode;
           var parentOffset = parentNode.getBoundingClientRect();
-          return parentOffset.top > top;
+
+          console.log(parentOffset.top);
+
+          return (stickedToTop) ? parentOffset.top > top : parentOffset.top > 0;
         }
 
         function elementHeigherThanWindow() {
@@ -105,9 +108,6 @@
                 if (containerBottomReached()) {
                   var parentNode = element.parentNode;
                   var parentOffset = parentNode.getBoundingClientRect();
-
-                  console.log('test');
-
                   var position = (stickedToTop) ? 'top: ' + (deltaContainerBottom()) + 'px;' : 'bottom: ' + (deltaContainerBottom()) + 'px';
                   // style element
                   element.setAttribute('style',
@@ -117,8 +117,6 @@
                     'transition: none;' +
                     'width: ' + parentOffset.width + 'px;' +
                     position);
-
-                  // console.log(bottom);
                 }
               }
             }
